@@ -98,7 +98,8 @@ abstract class AbstractTrieTest {
             val trieIter = trieSet.iterator()
             println("Checking if the iterator traverses the entire set...")
             while (trieIter.hasNext()) {
-                controlSet.remove(trieIter.next())
+                val s = trieIter.next()
+                controlSet.remove(s)
             }
             assertTrue(
                 controlSet.isEmpty(),
@@ -109,6 +110,17 @@ abstract class AbstractTrieTest {
             }
             println("All clear!")
         }
+
+        val trie = create()
+        val list = listOf("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
+        trie.addAll(list)
+        val iterator = trie.iterator()
+        var i: String
+        while (iterator.hasNext()) {
+            i = iterator.next()
+            assertTrue(i in list)
+        }
+        assertEquals(trie.last(), list.last())
     }
 
     protected fun doIteratorRemoveTest() {
@@ -170,6 +182,20 @@ abstract class AbstractTrieTest {
             }
             println("All clear!")
         }
+
+        val trie = create()
+        val week = listOf("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
+
+        trie.addAll(week)
+        val iterator = trie.iterator()
+        var i: String
+        while (iterator.hasNext()) {
+            i = iterator.next()
+            if (i.contains('t')) iterator.remove()
+        }
+        assertEquals(week[2], trie.elementAt(1))
+        assertEquals(week[4], trie.elementAt(2))
+        assertEquals(4, trie.size)
     }
 
 }

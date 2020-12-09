@@ -25,5 +25,4 @@ class TrieTest : AbstractTrieTest() {
     fun iteratorRemoveTestJava() {
         doIteratorRemoveTest()
     }
-
 }

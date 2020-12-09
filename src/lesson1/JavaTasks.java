@@ -1,6 +1,7 @@
 package lesson1;
 
 import kotlin.NotImplementedError;
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
 public class JavaTasks {
@@ -35,7 +36,39 @@ public class JavaTasks {
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
     static public void sortTimes(String inputName, String outputName) {
-        throw new NotImplementedError();
+
+
+
+        class Time implements Comparable<Time> {
+            private int h, m, s;
+
+            public Time(String str) {
+                String[] strTime = str.split("[: ]");
+                h = Integer.parseInt(strTime[0]) + (strTime[3] == "PM" ? 12 : 0);
+                m = Integer.parseInt(strTime[1]);
+                s = Integer.parseInt(strTime[2]);
+            }
+
+            @Override
+            public int compareTo(@NotNull Time date) {
+                if (h != date.h) {
+                    return h - date.h;
+                } else if (m != date.m) {
+                    return m - date.m;
+                } else {
+                    return s - date.s;
+                }
+            }
+
+            @Override
+            public String toString() {
+                return String.format("%02d:%02d:%02d ", h % 12 == 0 ? 12 : h % 12, m, s) + (h < 12 ? "AM" : "PM");
+            }
+        }
+
+        //List<Date> ...
+        //sort()
+        //print
     }
 
     /**
