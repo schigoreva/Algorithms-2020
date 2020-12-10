@@ -76,6 +76,19 @@ abstract class AbstractOpenAddressingSetTest {
                 )
             }
         }
+        val openAddressingSet = create<Int>(10)
+        for (i in 1..99) {
+            if (i % 2 == 0) {
+                openAddressingSet.add(i)
+            }
+        }
+        for (i in listOf(3, 5, 47, 77, 101)) {
+            assertFalse(openAddressingSet.remove(i))
+        }
+        for (i in listOf(4, 10, 50, 66, 96)) {
+            assertTrue(openAddressingSet.remove(i))
+        }
+        assertEquals(44, openAddressingSet.size)
     }
 
     protected fun doIteratorTest() {
@@ -118,6 +131,20 @@ abstract class AbstractOpenAddressingSetTest {
             }
             println("All clear!")
         }
+        val openAddressingSet = create<Int>(10)
+        for (i in 1..99) {
+            if (i % 2 == 0) {
+                openAddressingSet.add(i)
+            }
+        }
+        val iterator = openAddressingSet.iterator()
+        for (i in 1..99) {
+            if (i % 2 == 0) {
+                assertTrue(iterator.hasNext())
+                assertEquals(i, iterator.next())
+            }
+        }
+        assertFalse(iterator.hasNext())
     }
 
     protected fun doIteratorRemoveTest() {
@@ -175,5 +202,19 @@ abstract class AbstractOpenAddressingSetTest {
             }
             println("All clear!")
         }
+        val openAddressingSet = create<Int>(10)
+        for (i in 1..99) {
+            if (i % 2 == 0) {
+                openAddressingSet.add(i)
+            }
+        }
+        val iterator = openAddressingSet.iterator()
+        while (iterator.hasNext()) {
+            var x = iterator.next()
+            if (openAddressingSet.contains(x) && x % 3 == 0) {
+                iterator.remove()
+            }
+        }
+        assertEquals(33, openAddressingSet.size)
     }
 }
