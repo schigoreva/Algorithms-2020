@@ -3,6 +3,8 @@ package lesson2;
 import kotlin.NotImplementedError;
 import kotlin.Pair;
 
+import java.util.Arrays;
+
 @SuppressWarnings("unused")
 public class JavaAlgorithms {
     /**
@@ -98,7 +100,18 @@ public class JavaAlgorithms {
      * вернуть ту из них, которая встречается раньше в строке first.
      */
     static public String longestCommonSubstring(String firs, String second) {
-        throw new NotImplementedError();
+        // Трудоемкость - О(|firs|*|second|*min(|firs|,|second|)) ; Ресурсоемкость - О(min(|firs|,|second|)
+        String ans = "";
+        for (int i = 0; i < firs.length(); i++) {
+            for (int j = 0; j < second.length(); j++) {
+                int z;
+                for (z = 0; i + z < firs.length() && j + z < second.length() && firs.charAt(i + z) == second.charAt(j + z); z++) {}
+                if (z > ans.length()) {
+                    ans = firs.substring(i, i + z);
+                }
+            }
+        }
+        return ans;
     }
 
     /**
@@ -112,6 +125,19 @@ public class JavaAlgorithms {
      * Единица простым числом не считается.
      */
     static public int calcPrimesNumber(int limit) {
-        throw new NotImplementedError();
+        // Трудоемкость - О(limit * log(limit)) ; Ресурсоемкость - О(limit)
+        if (limit <= 1) {
+            return 0;
+        }
+        int[] isPrime = new int[limit + 1];
+        Arrays.fill(isPrime, 1);
+        isPrime[0] = 0;
+        isPrime[1] = 0;
+        for (int i = 2; i * i <= limit; i++) {
+            for (int j = i * i; j <= limit; j += i) {
+                isPrime[j] = 0;
+            }
+        }
+        return (int)Arrays.stream(isPrime).filter(x -> x == 1).count();
     }
 }

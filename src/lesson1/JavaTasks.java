@@ -3,6 +3,12 @@ package lesson1;
 import kotlin.NotImplementedError;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @SuppressWarnings("unused")
 public class JavaTasks {
     /**
@@ -36,15 +42,16 @@ public class JavaTasks {
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
     static public void sortTimes(String inputName, String outputName) {
-
-
-
+        // Трудоемкость - О(n * log(n)) ; Ресурсоемкость - О(n)
         class Time implements Comparable<Time> {
             private int h, m, s;
 
             public Time(String str) {
                 String[] strTime = str.split("[: ]");
-                h = Integer.parseInt(strTime[0]) + (strTime[3] == "PM" ? 12 : 0);
+                h = Integer.parseInt(strTime[0]) + (strTime[3].equals("PM") ? 12 : 0);
+                if (h % 12 == 0) {
+                    h -= 12;
+                }
                 m = Integer.parseInt(strTime[1]);
                 s = Integer.parseInt(strTime[2]);
             }
@@ -66,9 +73,13 @@ public class JavaTasks {
             }
         }
 
-        //List<Date> ...
-        //sort()
-        //print
+        try (BufferedReader reader = new BufferedReader(new FileReader(new File(inputName)))) {
+            try (PrintWriter writer = new PrintWriter(new File(outputName))) {
+                for (Time time : reader.lines().map(Time::new).sorted().collect(Collectors.toList())) {
+                    writer.println(time);
+                }
+            } catch (IOException e) {}
+        } catch (IOException e) {}
     }
 
     /**
@@ -132,7 +143,20 @@ public class JavaTasks {
      * 121.3
      */
     static public void sortTemperatures(String inputName, String outputName) {
-        throw new NotImplementedError();
+        // Трудоемкость - О(n) ; Ресурсоемкость - О(HIGH_TEMPERATURE - LOW_TEMPERATURE)
+        try (BufferedReader reader = new BufferedReader(new FileReader(new File(inputName)))) {
+            try (PrintWriter writer = new PrintWriter(new File(outputName))) {
+                float LOW_TEMPERATURE = -273.0f;
+                float HIGH_TEMPERATURE = 500.0f;
+                int[] count = new int[(int)(HIGH_TEMPERATURE - LOW_TEMPERATURE) * 10 + 1];
+                reader.lines().forEach(s -> count[Math.round((Float.parseFloat(s) - LOW_TEMPERATURE) * 10)]++);
+                for (int i = 0; i < count.length; i++) {
+                    for (int j = 0; j < count[i]; j++) {
+                        writer.println(String.format("%.1f", i / 10.0 + LOW_TEMPERATURE).replace(",", "."));
+                    }
+                }
+            } catch (IOException e) {}
+        } catch (IOException e) {}
     }
 
     /**

@@ -2,6 +2,10 @@ package lesson7;
 
 import kotlin.NotImplementedError;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -19,7 +23,47 @@ public class JavaDynamicTasks {
      * При сравнении подстрок, регистр символов *имеет* значение.
      */
     public static String longestCommonSubSequence(String first, String second) {
-        throw new NotImplementedError();
+        // Трудоемкость - О(|first|*|second|), Ресурсоемкость - О(|first|*|second|)
+        int[][] lcs = new int[first.length() + 1][second.length() + 1];
+        //Тип 0 - дописали символ
+        //Тип 1 - символ в первой строке не входит в ответ
+        //Тип 2 - символ во второй строке не входит в ответ
+        int[][] type = new int[first.length() + 1][second.length() + 1];
+        for (int i = 1; i <= first.length(); i++) {
+            for (int j = 1; j <= second.length(); j++) {
+                if (first.charAt(i - 1) == second.charAt(j - 1)) {
+                    lcs[i][j] = lcs[i - 1][j - 1] + 1;
+                    type[i][j] = 0;
+                }
+                if (lcs[i][j] <= lcs[i - 1][j]) {
+                    lcs[i][j] = lcs[i - 1][j];
+                    type[i][j] = 1;
+                }
+                if (lcs[i][j] <= lcs[i][j - 1]) {
+                    lcs[i][j] = lcs[i][j - 1];
+                    type[i][j] = 2;
+                }
+            }
+        }
+        int x = first.length(), y = second.length();
+        StringBuilder answer = new StringBuilder();
+        while (x != 0 && y != 0) {
+            switch (type[x][y]) {
+                case 0:
+                    answer.append(first.charAt(x - 1));
+                    x--;
+                    y--;
+                    break;
+                case 1:
+                    x--;
+                    break;
+                case 2:
+                    y--;
+                    break;
+            }
+        }
+        answer.reverse();
+        return answer.toString();
     }
 
     /**
@@ -35,7 +79,31 @@ public class JavaDynamicTasks {
      * В примере ответами являются 2, 8, 9, 12 или 2, 5, 9, 12 -- выбираем первую из них.
      */
     public static List<Integer> longestIncreasingSubSequence(List<Integer> list) {
-        throw new NotImplementedError();
+        // Трудоемкость - О(n^2), Ресурсоемкость - О(n)
+        int[] dp = new int[list.size()];
+        int[] last = new int[list.size()];
+        int length = 0, end = -1;
+        for (int i = 0; i < list.size(); i++) {
+            dp[i] = 1;
+            last[i] = -1;
+            for (int j = 0; j < i; j++) {
+                if (list.get(j) < list.get(i) && dp[j] + 1 > dp[i]) {
+                    dp[i] = dp[j] + 1;
+                    last[i] = j;
+                }
+            }
+            if (dp[i] > length) {
+                length = dp[i];
+                end = i;
+            }
+        }
+        List<Integer> answer = new ArrayList<>();
+        while (end != -1) {
+            answer.add(list.get(end));
+            end = last[end];
+        }
+        Collections.reverse(answer);
+        return answer;
     }
 
     /**
